@@ -14,28 +14,11 @@ public extension DataSource {
         case invalidResponse
     }
     
-    enum Domain: Sendable {
-        case remoteUAT
-#if DEBUG
-        case localhost
-#endif
-        
-        var baseUrl: String {
-            switch self {
-            case .remoteUAT: "https://ceo-uat.com/api"
-#if DEBUG
-            case .localhost: "http://localhost:8080/api"
-#endif
-            }
-        }
-    }
-    
     static func liveAPI(
-        domain: Domain,
+        baseUrl: URL,
         jwtProvider: JWTProvider
     ) -> Self {
         DataSource { request in
-            let baseUrl = URL(string: domain.baseUrl)!
             let url = baseUrl
                 .appending(path: request.path)
                 .appending(queryItems: request.queryItems)

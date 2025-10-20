@@ -2,21 +2,32 @@ public enum AuthError: Error {
     case noSession, failedToAcquireToken, other(Error)
 }
 
-public protocol JWTProvider: Sendable {
-    typealias JWT = String
+public struct JWTProvider: Sendable {
+    public typealias JWT = String
+    public typealias FetchTokenFunction = @Sendable () async throws(AuthError) -> JWT
     
-    func currentToken() async throws(AuthError) -> JWT
-    func refreshToken() async throws(AuthError) -> JWT
-}
-
-public struct MockJWTProvider: JWTProvider {
+    private let _currentToken: FetchTokenFunction
+    private let _refreshToken: FetchTokenFunction
     
-    public init() { }
+    public init(
+        currentToken: @escaping FetchTokenFunction,
+        refreshToken: @escaping FetchTokenFunction
+    ) {
+        self._currentToken = currentToken
+        self._refreshToken = refreshToken
+    }
     
     public func currentToken() async throws(AuthError) -> JWT {
-        "MockJWT"
+        try await _currentToken()
     }
     public func refreshToken() async throws(AuthError) -> JWT {
-        "MockJWT"
+        try await _refreshToken()
     }
+}
+
+public extension JWTProvider {
+    static let mock = JWTProvider(
+        currentToken: { "MockJWT" },
+        refreshToken: { "MockJWT" }
+    )
 }

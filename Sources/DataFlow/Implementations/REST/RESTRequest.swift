@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Request: Sendable {
+public struct RESTRequest: Requestable {
     let path: String
     let queryItems: [URLQueryItem]
     let method: Method
@@ -19,7 +19,7 @@ public struct Request: Sendable {
     }
 }
 
-public extension Request {
+public extension RESTRequest {
     enum Method: String, Sendable {
         case get, post, put, patch, delete
     }

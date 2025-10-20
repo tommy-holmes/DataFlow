@@ -6,7 +6,8 @@ private extension Logger {
     static let auth = Logger(subsystem: "com.ceo", category: "auth")
 }
 
-public extension DataSource {
+public extension DataSource
+where R == RESTRequest {
     typealias JWT = String
     
     enum HTTPError: Error {

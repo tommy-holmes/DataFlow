@@ -1,10 +1,10 @@
 import Foundation
 
 public struct RESTRequest: Requestable {
-    let path: String
-    let queryItems: [URLQueryItem]
-    let method: Method
-    let body: Data?
+    public let path: String
+    public let queryItems: [URLQueryItem]
+    public let method: Method
+    public let body: Data?
     
     public init(
         path: String,

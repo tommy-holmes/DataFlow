@@ -458,7 +458,7 @@ Fetches data from REST API and decodes into model.
 ```swift
 let pipeline = RESTPipeline<User>(
     request: RESTRequest(path: "/users/1"),
-    source: .liveAPI(baseUrl: url, authProvider: .none)
+    source: .liveAPI(baseUrl: url)
 )
 
 let user = try await pipeline.loadData()
@@ -726,7 +726,7 @@ let user = try await cached.loadData()
 public extension DataSource where Type == RESTRequest {
     static func liveAPI(
         baseUrl: URL,
-        authProvider: AuthProvider = .none
+        authentication: any AuthenticationStrategy = .none
     ) -> Self
 }
 ```
@@ -735,12 +735,17 @@ Creates a live REST API data source.
 
 **Parameters**:
 - `baseUrl`: Base URL for API requests
-- `authProvider`: Authentication strategy
+- `authentication`: Authentication strategy (default: `.none`)
 
-**Auth Providers**:
+**Authentication Strategies**:
 - `.none`: No authentication
 - `.bearerToken(String)`: Bearer token auth
-- `.jwtProvider(JWTProvider)`: JWT with refresh support
+- `.basic(username:password:)`: Basic authentication
+- `.apiKey(_:headerName:)`: API key in header
+- `.apiKeyQuery(_:parameterName:)`: API key in query parameter
+- `.customHeaders(_:)`: Custom HTTP headers
+- `.jwt(_:)`: JWT with automatic refresh support
+- `.composite(strategies:)`: Combine multiple strategies
 
 ---
 
@@ -897,10 +902,41 @@ WebSocket connection errors.
 ```swift
 let pipeline = RESTPipeline<User>(
     request: RESTRequest(path: "/users/1"),
-    source: .liveAPI(baseUrl: apiURL, authProvider: .bearerToken(token))
+    source: .liveAPI(baseUrl: apiURL, authentication: .bearerToken(token))
 )
 
 let user = try await pipeline.loadData()
+```
+
+### With Different Authentication Strategies
+
+```swift
+// No Authentication (default)
+.liveAPI(baseUrl: url)
+
+// Bearer Token
+.liveAPI(baseUrl: url, authentication: .bearerToken("token"))
+
+// Basic Authentication
+.liveAPI(baseUrl: url, authentication: .basic(username: "user", password: "pass"))
+
+// API Key in Header
+.liveAPI(baseUrl: url, authentication: .apiKey("key", headerName: "X-API-Key"))
+
+// API Key in Query
+.liveAPI(baseUrl: url, authentication: .apiKeyQuery("key", parameterName: "api_key"))
+
+// JWT with Refresh
+.liveAPI(baseUrl: url, authentication: .jwt(jwtProvider))
+
+// Custom Headers
+.liveAPI(baseUrl: url, authentication: .customHeaders(["X-Client": "app"]))
+
+// Multiple Strategies Combined
+.liveAPI(baseUrl: url, authentication: .composite(strategies: [
+    .apiKey("key", headerName: "X-API-Key"),
+    .customHeaders(["X-Client": "app"])
+]))
 ```
 
 ### Load from Bundle

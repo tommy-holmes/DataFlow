@@ -75,8 +75,7 @@ Loading data from REST APIs is the most common use case for DataFlow.
 let pipeline = RESTPipeline<User>(
     request: RESTRequest(path: "/users/1"),
     source: DataSource<RESTRequest>.liveAPI(
-        baseUrl: URL(string: "https://api.example.com")!,
-        authProvider: .none
+        baseUrl: URL(string: "https://api.example.com")!
     )
 )
 
@@ -126,20 +125,38 @@ let deleteRequest = RESTRequest(
 
 ### Authentication
 
-DataFlow supports multiple authentication strategies:
+DataFlow supports multiple authentication strategies via the `AuthenticationStrategy` protocol:
 
 ```swift
-// No authentication
-.liveAPI(baseUrl: url, authProvider: .none)
+// No authentication (default)
+.liveAPI(baseUrl: url)
 
 // Bearer token
-.liveAPI(baseUrl: url, authProvider: .bearerToken("your-token"))
+.liveAPI(baseUrl: url, authentication: .bearerToken("your-token"))
+
+// Basic authentication
+.liveAPI(baseUrl: url, authentication: .basic(username: "user", password: "pass"))
+
+// API Key in header
+.liveAPI(baseUrl: url, authentication: .apiKey("key", headerName: "X-API-Key"))
+
+// API Key in query parameter
+.liveAPI(baseUrl: url, authentication: .apiKeyQuery("key", parameterName: "api_key"))
+
+// Custom headers
+.liveAPI(baseUrl: url, authentication: .customHeaders(["X-Client": "app"]))
 
 // JWT with automatic refresh
-.liveAPI(baseUrl: url, authProvider: .jwtProvider(jwtProvider))
+.liveAPI(baseUrl: url, authentication: .jwt(jwtProvider))
+
+// Combine multiple strategies
+.liveAPI(baseUrl: url, authentication: .composite(strategies: [
+    .apiKey("key", headerName: "X-API-Key"),
+    .customHeaders(["X-Client": "app"])
+]))
 ```
 
-The JWT provider automatically handles token refresh when needed, keeping your code simple and your tokens fresh.
+The JWT strategy automatically handles token refresh when receiving a 401 response, keeping your code simple and your tokens fresh.
 
 ### Error Handling
 
@@ -568,7 +585,7 @@ Try one pipeline, fall back to another on failure:
 func loadUserWithFallback(id: Int) async throws -> User {
     let restPipeline = RESTPipeline<User>(
         request: RESTRequest(path: "/users/\(id)"),
-        source: .liveAPI(baseUrl: apiURL, authProvider: .none)
+        source: .liveAPI(baseUrl: apiURL)
     )
 
     do {
@@ -701,7 +718,7 @@ Create data sources once and reuse them across multiple pipelines:
 ```swift
 let apiSource = DataSource<RESTRequest>.liveAPI(
     baseUrl: apiURL,
-    authProvider: .bearerToken(token)
+    authentication: .bearerToken(token)
 )
 
 let userPipeline = RESTPipeline<User>(

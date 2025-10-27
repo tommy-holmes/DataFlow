@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import DataFlow
+@testable import Flux
 
 @Suite("Cached Pipeline")
 struct CachedPipelineTests {

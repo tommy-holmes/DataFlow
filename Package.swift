@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "DataFlow",
+    name: "Flux",
     platforms: [
         .iOS(.v16),
         .macOS(.v14),
@@ -13,17 +13,17 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "DataFlow",
-            targets: ["DataFlow"]
+            name: "Flux",
+            targets: ["Flux"]
         ),
     ],
     targets: [
         .target(
-            name: "DataFlow"
+            name: "Flux"
         ),
         .testTarget(
-            name: "DataFlowTests",
-            dependencies: ["DataFlow"]
+            name: "FluxTests",
+            dependencies: ["Flux"]
         ),
     ]
 )

@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import DataFlow
+@testable import Flux
 
 @Suite("Data Aggregation Pipeline")
 struct DataAggregationTests {

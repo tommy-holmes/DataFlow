@@ -1,5 +1,5 @@
 import Foundation
-@testable import DataFlow
+@testable import Flux
 
 // MARK: - Custom Request Types
 

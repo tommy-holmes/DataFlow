@@ -1,20 +1,13 @@
 # Flux
 
-[![Swift 6.2+](https://img.shields.io/badge/Swift-6.2+-orange.svg)](https://swift.org)
-     [![iOS 16+](https://img.shields.io/badge/iOS-16+-blue.svg)](https://developer.apple.c
-     om/ios/)
-     [![macOS 14+](https://img.shields.io/badge/macOS-14+-lightgrey.svg)](https://www.appl
-     e.com/macos/)
-     [![visionOS 1+](https://img.shields.io/badge/visionOS-1+-purple.svg)](https://www.app
-     le.com/visionos/)
-     [![watchOS 10+](https://img.shields.io/badge/watchOS-10+-blueviolet.svg)](https://www
-     .apple.com/watchos/)
-     [![tvOS
-     16+](https://img.shields.io/badge/tvOS-16+-ff69b4.svg)](https://www.apple.com/tv/)
-     [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://openso
-     urce.org/licenses/MIT)
-     [![SPM Compatible](https://img.shields.io/badge/SPM-compatible-brightgreen.svg)](http
-     s://swift.org/package-manager/)
+[![Swift 6.2+](https://img.shields.io/badge/Swift-6.2%2B-orange.svg)](https://swift.org)
+[![iOS 16+](https://img.shields.io/badge/iOS-16%2B-blue.svg)](https://developer.apple.com/ios/)
+[![macOS 14+](https://img.shields.io/badge/macOS-14%2B-lightgrey.svg)](https://www.apple.com/macos/)
+[![visionOS 1+](https://img.shields.io/badge/visionOS-1%2B-purple.svg)](https://www.apple.com/visionos/)
+[![watchOS 10+](https://img.shields.io/badge/watchOS-10%2B-blueviolet.svg)](https://www.apple.com/watchos/)
+[![tvOS 16+](https://img.shields.io/badge/tvOS-16%2B-ff69b4.svg)](https://www.apple.com/tv/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![SPM Compatible](https://img.shields.io/badge/SPM-compatible-brightgreen.svg)](https://swift.org/package-manager/)
 
 A composable, type-safe library for building reusable data pipelines in Swift.
 

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct RESTRequest: Requestable {
+public struct RESTRequest: Sendable {
     public let path: String
     public let queryItems: [URLQueryItem]
     public let method: Method

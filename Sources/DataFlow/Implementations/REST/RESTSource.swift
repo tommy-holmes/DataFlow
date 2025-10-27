@@ -7,7 +7,7 @@ private extension Logger {
 }
 
 public extension DataSource
-where R == RESTRequest {
+where Type == RESTRequest {
     typealias JWT = String
     
     enum HTTPError: Error {

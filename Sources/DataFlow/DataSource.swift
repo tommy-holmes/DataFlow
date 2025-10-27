@@ -1,7 +1,7 @@
 import Foundation
 
-public struct DataSource<R: Requestable>: Sendable {
-    public typealias FetchFunction = @Sendable (R) async throws -> Data
+public struct DataSource<Type>: Sendable {
+    public typealias FetchFunction = @Sendable (Type) async throws -> Data
     
     public var fetch: FetchFunction
     

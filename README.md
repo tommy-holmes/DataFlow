@@ -21,7 +21,7 @@ Rather than implementing these patterns repeatedly across your codebase, DataFlo
 // Fetch and decode a user from a REST API
 let pipeline = RESTPipeline<User>(
     request: RESTRequest(path: "/users/1"),
-    source: DataSource<RESTRequest>.liveAPI(
+    source: .liveAPI(
         baseUrl: URL(string: "https://api.example.com")!,
         authProvider: .bearerToken("token")
     )

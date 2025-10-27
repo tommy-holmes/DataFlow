@@ -1,4 +1,4 @@
-# DataFlow
+# Flux
 
 A composable, type-safe library for building reusable data pipelines in Swift.
 

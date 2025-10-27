@@ -217,9 +217,9 @@ Your model must conform to `Decodable` for any format you use.
 
 ## CSV Data
 
-CSV files are common in business applications and data science workflows. DataFlow provides first-class support for CSV parsing.
+CSV files are common in business applications and data science workflows. DataFlow provides first-class support for CSV parsing with flexible header handling.
 
-### Loading CSV Files
+### Loading CSV Files from Bundle
 
 ```swift
 struct Person: Decodable {
@@ -229,7 +229,7 @@ struct Person: Decodable {
 
 let pipeline = CSVPipeline<Person>(
     request: CSVRequest(path: "people"),
-    source: DataSource<CSVRequest>.fromBundle()
+    source: DataSource<CSVRequest>.from(bundle: .main)
 )
 
 let people = try await pipeline.loadData()
@@ -245,11 +245,51 @@ Alice,alice@example.com
 Bob,bob@example.com
 ```
 
-DataFlow assumes the first row is a header by default. If your CSV doesn't have headers, specify that in the request:
+DataFlow uses the first row as headers by default.
+
+### Loading CSV with Custom Headers
+
+If your CSV file doesn't have headers, provide them explicitly:
 
 ```swift
-CSVRequest(path: "data", hasHeader: false)
+let csvData = """
+Alice,alice@example.com
+Bob,bob@example.com
+""".data(using: .utf8)!
+
+let pipeline = CSVPipeline<Person>(
+    request: CSVRequest(path: "people"),
+    source: DataSource<CSVRequest>.from(csvData: csvData),
+    headerConfiguation: .custom(["name", "email"])
+)
+
+let people = try await pipeline.loadData()
 ```
+
+### Auto-Generated Headers
+
+If you don't provide headers and the CSV has no header row, DataFlow generates generic column names:
+
+```swift
+struct Item: Decodable {
+    let column_0: String  // First column
+    let column_1: String  // Second column
+}
+
+let pipeline = CSVPipeline<Item>(
+    request: CSVRequest(path: "data"),
+    source: dataSource,
+    headerConfiguation: .custom([])  // Auto-generate column_0, column_1, etc.
+)
+
+let items = try await pipeline.loadData()
+```
+
+### Header Configuration Options
+
+- `.fromCSV` (default): Use the first line of the CSV as headers
+- `.custom(["header1", "header2"])`: Provide custom headers
+- `.custom([])`: Auto-generate headers (column_0, column_1, etc.)
 
 ### Important: String Types
 
@@ -295,6 +335,21 @@ name,description
 ```
 
 DataFlow handles this automatically—no extra configuration needed.
+
+### Loading from Raw Data
+
+Use `DataSource.from(csvData:)` to work with CSV data directly:
+
+```swift
+let csvData = try Data(contentsOf: someURL)
+
+let pipeline = CSVPipeline<Person>(
+    request: CSVRequest(path: "inline"),
+    source: DataSource<CSVRequest>.from(csvData: csvData)
+)
+
+let people = try await pipeline.loadData()
+```
 
 ---
 
@@ -601,6 +656,13 @@ do {
 ```swift
 do {
     let data = try await csvPipeline.loadData()
+} catch let error as CSVSourceError {
+    switch error {
+    case .fileNotFound(let path):
+        print("CSV file not found: \(path)")
+    case .readFailed(let path, let description):
+        print("Failed to read CSV at \(path): \(description)")
+    }
 } catch let error as CSVError {
     switch error {
     case .decodingFailed(let description):

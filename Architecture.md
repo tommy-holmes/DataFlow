@@ -167,8 +167,6 @@ struct RESTRequest: Sendable, Hashable {
 
 struct CSVRequest: Sendable {
     let path: String
-    let bundle: Bundle
-    let hasHeader: Bool
 }
 ```
 

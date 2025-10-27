@@ -169,27 +169,19 @@ RESTRequest(
 ```swift
 public struct CSVRequest: Sendable {
     public let path: String
-    public let bundle: Bundle
-    public let hasHeader: Bool
 
-    public init(
-        path: String,
-        bundle: Bundle = .main,
-        hasHeader: Bool = true
-    )
+    public init(path: String)
 }
 ```
 
-Represents a CSV file to load from a bundle.
+Represents a CSV file to load.
 
 **Properties**:
-- `path`: File path without extension (e.g., "users")
-- `bundle`: Bundle to load from (default: .main)
-- `hasHeader`: Whether first row is header (default: true)
+- `path`: File path or identifier (e.g., "users")
 
 **Example**:
 ```swift
-CSVRequest(path: "users", bundle: .main, hasHeader: true)
+CSVRequest(path: "users")
 ```
 
 ---
@@ -327,7 +319,12 @@ let user = try transformer.transform(jsonData)
 
 ```swift
 public struct CSVTransformer<Model: Decodable>: DataTransformer {
-    public init()
+    public enum CSVHeaderConfiguration: Sendable {
+        case fromCSV
+        case custom([String])
+    }
+
+    public init(headerConfiguation: CSVHeaderConfiguration)
 }
 ```
 
@@ -336,10 +333,15 @@ Parses CSV data and decodes rows into models.
 **Generic Parameter**:
 - `Model`: Decodable model type
 
+**Header Configuration**:
+- `.fromCSV`: Use the first line of the CSV as headers
+- `.custom([String])`: Provide custom headers (first line is data)
+- `.custom([])`: Generate generic headers (column_0, column_1, etc.)
+
 **Features**:
 - CSV parsing with quoted field support
 - Column count validation
-- Header row handling
+- Flexible header handling
 
 **Limitations**:
 - CSV values are parsed as strings
@@ -347,7 +349,14 @@ Parses CSV data and decodes rows into models.
 
 **Example**:
 ```swift
-let transformer = CSVTransformer<Person>()
+// Use headers from CSV file
+let transformer = CSVTransformer<Person>(headerConfiguation: .fromCSV)
+let people = try transformer.transform(csvData)
+
+// Provide custom headers
+let transformer = CSVTransformer<Person>(
+    headerConfiguation: .custom(["name", "email"])
+)
 let people = try transformer.transform(csvData)
 ```
 
@@ -467,25 +476,44 @@ public struct CSVPipeline<D: Decodable>: ModelProvider {
 
     public init(
         request: CSVRequest,
-        source: DataSource<CSVRequest>
+        source: DataSource<CSVRequest>,
+        headerConfiguation: CSVTransformer<D>.CSVHeaderConfiguration = .fromCSV
     )
 
     public func loadData() async throws -> [D]
 }
 ```
 
-Parses CSV file into array of models.
+Parses CSV data into array of models.
 
 **Generic Parameter**:
 - `D`: Decodable model type
 
+**Parameters**:
+- `request`: CSVRequest specifying data location
+- `source`: Data source for fetching CSV data
+- `headerConfiguation`: How to handle CSV headers (default: .fromCSV)
+
 **Returns**: Array of decoded models
+
+**Header Configuration**:
+- `.fromCSV`: Use the first line of the CSV as headers
+- `.custom([String])`: Provide custom headers (assumes no header row in CSV)
+- `.custom([])`: Auto-generate column names (column_0, column_1, etc.)
 
 **Example**:
 ```swift
+// Load CSV with headers from file
 let pipeline = CSVPipeline<Person>(
     request: CSVRequest(path: "people"),
-    source: .fromBundle()
+    source: .from(bundle: .main)
+)
+
+// Load CSV with custom headers (no header row in file)
+let pipeline = CSVPipeline<Person>(
+    request: CSVRequest(path: "people"),
+    source: .from(csvData: csvData),
+    headerConfiguation: .custom(["name", "email", "age"])
 )
 
 let people = try await pipeline.loadData()
@@ -720,11 +748,26 @@ Creates a live REST API data source.
 
 ```swift
 public extension DataSource where Type == CSVRequest {
-    static func fromBundle() -> Self
+    static func from(bundle: Bundle = .main) -> Self
+    static func from(csvData: Data) -> Self
 }
 ```
 
-Creates a data source that loads CSV files from bundle.
+Creates data sources for CSV data.
+
+**Methods**:
+- `from(bundle:)`: Load CSV files from app bundle (default: .main)
+- `from(csvData:)`: Use raw CSV data directly
+
+**Example**:
+```swift
+// Load from bundle
+let source = DataSource<CSVRequest>.from(bundle: .main)
+
+// Use raw data
+let csvData = "name,email\nAlice,alice@example.com".data(using: .utf8)!
+let source = DataSource<CSVRequest>.from(csvData: csvData)
+```
 
 ---
 

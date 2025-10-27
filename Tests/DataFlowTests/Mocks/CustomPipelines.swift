@@ -28,10 +28,9 @@ import Foundation
 /// - Custom identifier-based data fetching
 /// - Integration with file-based sources
 struct CustomDataPipeline<D: Decodable>: ModelProvider {
+    let request: CustomDataRequest
     var source: DataSource<CustomDataRequest>
     var transformer: JSONTransformer<D>
-
-    private let request: CustomDataRequest
 
     init(request: CustomDataRequest, source: DataSource<CustomDataRequest>) {
         self.request = request
@@ -72,10 +71,9 @@ struct CustomDataPipeline<D: Decodable>: ModelProvider {
 /// - Conditional query construction
 /// - Parameter variation scenarios
 struct FilteredDataPipeline<D: Decodable>: ModelProvider {
+    let request: FilteredDataRequest
     var source: DataSource<FilteredDataRequest>
     var transformer: JSONTransformer<D>
-
-    private let request: FilteredDataRequest
 
     init(request: FilteredDataRequest, source: DataSource<FilteredDataRequest>) {
         self.request = request

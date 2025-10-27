@@ -72,8 +72,8 @@ struct DataAggregationTests {
             source: mockSource
         )
 
-        #expect(pipeline.source != nil)
-        #expect(pipeline.transformer != nil)
+        #expect(type(of: pipeline.source) == DataSource<AggregationRequest<RESTRequest>>.self)
+        #expect(type(of: pipeline.transformer) == AggregationTransformer.self)
     }
 
     @Test("DataAggregationPipeline loads aggregated data")
@@ -129,8 +129,8 @@ struct DataAggregationTests {
         let aggregatingSource = DataSource<AggregationRequest<RESTRequest>>
             .aggregating(pipelines: [source], parallelFetch: false)
 
-        // Verify it's created
-        #expect(aggregatingSource != nil)
+        // Verify it's created with correct type
+        #expect(type(of: aggregatingSource) == DataSource<AggregationRequest<RESTRequest>>.self)
     }
 
     @Test("Aggregation pipeline integrates with other pipelines")
@@ -164,3 +164,4 @@ struct DataAggregationTests {
         #expect(!result.isEmpty)
     }
 }
+

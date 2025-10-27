@@ -72,8 +72,8 @@ struct WebSocketPipelineTests {
             source: mockSource
         )
 
-        #expect(pipeline.source != nil)
-        #expect(pipeline.transformer != nil)
+        #expect(type(of: pipeline.source) == DataSource<WebSocketRequest>.self)
+        #expect(type(of: pipeline.transformer) == WebSocketTransformer<User>.self)
     }
 
     @Test("WebSocketPipeline loads data from source")

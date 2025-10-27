@@ -1,5 +1,22 @@
 # Flux
 
+[![Swift
+     6.2+](https://img.shields.io/badge/Swift-6.2+-orange.svg)](https://swift.org)
+     [![iOS 16+](https://img.shields.io/badge/iOS-16+-blue.svg)](https://developer.apple.c
+     om/ios/)
+     [![macOS 14+](https://img.shields.io/badge/macOS-14+-lightgrey.svg)](https://www.appl
+     e.com/macos/)
+     [![visionOS 1+](https://img.shields.io/badge/visionOS-1+-purple.svg)](https://www.app
+     le.com/visionos/)
+     [![watchOS 10+](https://img.shields.io/badge/watchOS-10+-blueviolet.svg)](https://www
+     .apple.com/watchos/)
+     [![tvOS
+     16+](https://img.shields.io/badge/tvOS-16+-ff69b4.svg)](https://www.apple.com/tv/)
+     [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://openso
+     urce.org/licenses/MIT)
+     [![SPM Compatible](https://img.shields.io/badge/SPM-compatible-brightgreen.svg)](http
+     s://swift.org/package-manager/)
+
 A composable, type-safe library for building reusable data pipelines in Swift.
 
 DataFlow provides a clean abstraction for fetching and transforming data from any source—REST APIs, local files, databases, WebSockets, or your own custom sources. Built from the ground up with modern Swift concurrency, type safety, and composability in mind.
@@ -129,7 +146,7 @@ Combine results from multiple pipelines into a single aggregated result.
 Add DataFlow to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/yourusername/DataFlow.git", from: "1.0.0")
+.package(url: "https://github.com/tommy-holmes/Flux.git", from: "0.2.0")
 ```
 
 Or in Xcode: File → Add Packages → enter the repository URL.

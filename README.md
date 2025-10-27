@@ -1,7 +1,6 @@
 # Flux
 
-[![Swift
-     6.2+](https://img.shields.io/badge/Swift-6.2+-orange.svg)](https://swift.org)
+[![Swift 6.2+](https://img.shields.io/badge/Swift-6.2+-orange.svg)](https://swift.org)
      [![iOS 16+](https://img.shields.io/badge/iOS-16+-blue.svg)](https://developer.apple.c
      om/ios/)
      [![macOS 14+](https://img.shields.io/badge/macOS-14+-lightgrey.svg)](https://www.appl

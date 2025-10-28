@@ -17,7 +17,7 @@ struct AuthenticationStrategyTests {
 
     @Test("BearerTokenAuthentication adds Bearer header")
     func bearerTokenAddsAuthorizationHeader() async throws {
-        let auth = BearerTokenAuthentication(token: "test-token-123")
+        let auth: AuthenticationStrategy = .bearerToken("test-token-123")
         var request = URLRequest(url: URL(string: "https://api.example.com")!)
 
         try await auth.authenticate(&request)

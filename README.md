@@ -11,7 +11,7 @@
 
 A composable, type-safe library for building reusable data pipelines in Swift.
 
-DataFlow provides a clean abstraction for fetching and transforming data from any source—REST APIs, local files, databases, WebSockets, or your own custom sources. Built from the ground up with modern Swift concurrency, type safety, and composability in mind.
+Flux provides a clean abstraction for fetching and transforming data from any source—REST APIs, local files, databases, WebSockets, or your own custom sources. Built from the ground up with modern Swift concurrency, type safety, and composability in mind.
 
 ## Motivation
 

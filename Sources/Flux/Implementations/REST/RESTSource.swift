@@ -28,7 +28,9 @@ where Type == RESTRequest {
                 var req = URLRequest(url: url)
                 req.httpMethod = request.method.rawValue.uppercased()
                 req.httpBody = request.body
-                req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                for header in request.headers {
+                    req.setValue(header.value, forHTTPHeaderField: header.field)
+                }
                 try await authentication.authenticate(&req)
                 return req
             }
